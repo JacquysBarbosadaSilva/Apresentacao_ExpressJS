@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Express.js - Seminário ADS</title>
+    <meta
+      name="description"
+      content="Seminário sobre Express.js: definição, origem, instalação, recursos, segurança e mercado."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&family=Manrope:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f0f0f0;
+        --card: #d9d9d9;
+        --navy: #0a0026;
+        --text: #1c1436;
+        --green: #8ee59a;
+        --red: #ff7a70;
+        --amber: #f0a83c;
+        --code: #1e1e1e;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          400 1rem/1.65 Manrope,
+          Arial,
+          sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: Archivo, Arial, sans-serif;
+        color: var(--navy);
+        line-height: 1.15;
+        margin: 0;
+      }
+      a {
+        color: var(--navy);
+      }
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--navy);
+        outline-offset: 3px;
+      }
+
+      header.hero {
+        background: var(--bg);
+        text-align: center;
+        padding: 72px 20px 40px;
+      }
+      header.hero h1 {
+        font-weight: 900;
+        font-size: clamp(3rem, 13vw, 8rem);
+        letter-spacing: -0.02em;
+      }
+      header.hero p {
+        max-width: 60ch;
+        margin: 16px auto 0;
+        font-size: 1.1rem;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      section {
+        padding: 56px 0 8px;
+      }
+      section > h2 {
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      .lead {
+        max-width: 70ch;
+        margin: -12px auto 28px;
+        text-align: center;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 640px) {
+        .c2,
+        .c4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 900px) {
+        .c3 {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .c4 {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .card {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 22px 24px;
+      }
+      .card h3 {
+        font-size: 1.15rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .card p {
+        margin: 0;
+      }
+      .card p + p {
+        margin-top: 8px;
+      }
+      .card ul,
+      .card ol {
+        margin: 0;
+        padding-left: 1.2rem;
+      }
+      .card li + li {
+        margin-top: 6px;
+      }
+      .dark {
+        background: var(--navy);
+        color: #fff;
+      }
+      .dark h3 {
+        color: #fff;
+      }
+
+      .flow .card {
+        border-top: 6px solid var(--navy);
+      }
+
+      .layers {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        align-items: stretch;
+        margin-top: 20px;
+      }
+      .layer {
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        text-align: center;
+        border: 3px solid;
+      }
+      .layer b {
+        display: block;
+        color: #fff;
+        padding: 10px;
+        font-family: Archivo, Arial, sans-serif;
+      }
+      .layer span {
+        display: block;
+        padding: 14px;
+        font-size: 0.92rem;
+      }
+      .l1 {
+        border-color: #1a5fd6;
+      }
+      .l1 b {
+        background: #1a5fd6;
+      }
+      .l2 {
+        border-color: #12803f;
+      }
+      .l2 b {
+        background: #12803f;
+      }
+      .l3 {
+        border-color: #4a3aa8;
+      }
+      .l3 b {
+        background: #4a3aa8;
+      }
+      .arrow {
+        align-self: center;
+        font-weight: 800;
+        color: var(--navy);
+        font-size: 1.4rem;
+      }
+      @media (max-width: 760px) {
+        .layers {
+          grid-template-columns: 1fr;
+        }
+        .arrow {
+          transform: rotate(90deg);
+          text-align: center;
+        }
+      }
+
+      .tags {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, 1fr);
+        text-align: center;
+      }
+      @media (min-width: 900px) {
+        .tags {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .tags span {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 14px 22px;
+        font-family: Archivo, Arial, sans-serif;
+        font-weight: 800;
+        color: var(--navy);
+      }
+      .note {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 16px 22px;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      pre {
+        background: var(--code);
+        color: #e6e6e6;
+        border-radius: 12px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        margin: 12px 0 0;
+        font:
+          0.88rem/1.6 Consolas,
+          Menlo,
+          monospace;
+      }
+      code {
+        font-family: Consolas, Menlo, monospace;
+      }
+      p code,
+      li code {
+        background: #c6c6c6;
+        padding: 1px 6px;
+        border-radius: 5px;
+        font-size: 0.9em;
+      }
+      .k {
+        color: #c586c0;
+      }
+      .s {
+        color: #ce9178;
+      }
+      .f {
+        color: #dcdcaa;
+      }
+      .c {
+        color: #7a9a6a;
+      }
+
+      .pf {
+        background: var(--navy);
+        color: #fff;
+        border-radius: 18px;
+        padding: 22px 24px;
+      }
+      .pf h3 {
+        color: var(--green);
+      }
+      .pf.lim h3 {
+        color: var(--red);
+      }
+      .pf li {
+        margin-bottom: 8px;
+      }
+      .pf ul {
+        padding-left: 1.2rem;
+        margin: 12px 0 0;
+      }
+
+      .cve {
+        margin-bottom: 28px;
+      }
+      .cve-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .cve-head h3 {
+        font-size: 1.3rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-right: auto;
+      }
+      .badge {
+        background: var(--navy);
+        color: #fff;
+        border-radius: 999px;
+        padding: 6px 16px;
+        font-weight: 800;
+        font-size: 0.9rem;
+      }
+      .badge.med {
+        color: var(--amber);
+      }
+      .badge.high {
+        color: var(--red);
+      }
+
+      .demo pre {
+        margin-top: 10px;
+      }
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+      .wide {
+        display: grid;
+        gap: 12px 28px;
+        grid-template-columns: 1fr;
+        align-items: center;
+      }
+      .wide pre {
+        margin: 0;
+      }
+      @media (min-width: 800px) {
+        .wide {
+          grid-template-columns: 5fr 7fr;
+        }
+      }
+
+      .ref {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        columns: 2 320px;
+        column-gap: 32px;
+      }
+      .ref li {
+        margin-bottom: 8px;
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        background: var(--navy);
+        color: #fff;
+        margin-top: 72px;
+        padding: 44px 20px;
+      }
+      .foot {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        gap: 28px;
+        grid-template-columns: 1.4fr 1fr;
+      }
+      footer h2 {
+        color: #fff;
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+      }
+      footer ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      footer li {
+        padding: 3px 0;
+      }
+      footer p {
+        margin: 0 0 6px;
+      }
+      @media (max-width: 700px) {
+        .foot {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <h1>EXPRESS.JS</h1>
+      <p>
+        Seminário de ADS sobre o framework web mais utilizado do ecossistema
+        Node.js.
+      </p>
+    </header>
+
+    <main>
+      <section id="definicao">
+        <h2>Definição e classificação</h2>
+        <div class="grid c2">
+          <div class="card">
+            <h3>O que é?</h3>
+            <p>
+              Express é um framework de aplicações web Node.js minimalista e
+              flexível, que oferece um conjunto robusto de recursos para
+              aplicações web e mobile.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Qual problema resolve?</h3>
+            <p>
+              Simplifica o trabalho com o HTTP nativo do Node.js, oferecendo
+              roteamento e middlewares para criar aplicações web e APIs com
+              menos código.
+            </p>
+          </div>
+        </div>
+        <div class="note">
+          <strong>Onde atua dentro de uma aplicação web?</strong> No back-end,
+          entre o cliente e os dados.
+        </div>
+        <div
+          class="layers"
+          role="img"
+          aria-label="Front-end envia requisição HTTP ao back-end com Express, que consulta o banco de dados e devolve os dados"
+        >
+          <div class="layer l1">
+            <b>Front-End (Cliente)</b
+            ><span>HTML, CSS, JavaScript (React, etc.)</span>
+          </div>
+          <div class="arrow">&harr;</div>
+          <div class="layer l2">
+            <b>Back-End (Servidor)</b
+            ><span
+              >Node.js + Express.js<br /><strong
+                >Express atua aqui</strong
+              ></span
+            >
+          </div>
+          <div class="arrow">&harr;</div>
+          <div class="layer l3">
+            <b>Banco de Dados / Serviços</b
+            ><span>MySQL, MongoDB, APIs, etc.</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="origem">
+        <h2>Origem e evolução</h2>
+        <div class="grid c4 flow">
+          <div class="card">
+            <h3>Criado em 2010 por TJ Holowaychuk</h3>
+            <p>
+              Inspirado no Sinatra (Ruby) para simplificar a criação de
+              servidores HTTP no Node.js.
+            </p>
+          </div>
+          <div class="card">
+            <h3>O problema: módulo HTTP nativo</h3>
+            <p>
+              Criar rotas apenas com Node.js puro exigia muito código
+              repetitivo. O Express surgiu para simplificar e acelerar o
+              desenvolvimento.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Gestão StrongLoop / IBM</h3>
+            <p>
+              A aquisição do projeto garantiu suporte corporativo para grandes
+              aplicações comerciais.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Padrão da indústria</h3>
+            <p>
+              Atualmente é o framework web back-end mais popular e utilizado de
+              todo o ecossistema Node.js.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="uso">
+        <h2>Quando utilizar</h2>
+        <div class="tags">
+          <span>APIs REST</span><span>Microsserviços</span
+          ><span>Protótipos</span> <span>MVPs</span
+          ><span>Serviços de Gateway</span><span>Backend for Frontend</span>
+        </div>
+        <div class="note">
+          É mais adequado quando o objetivo é criar back-ends e APIs
+          <strong>rápidos de desenvolver, flexíveis e simples</strong>, evitando
+          arquiteturas rígidas.
+        </div>
+      </section>
+
+      <section id="arquitetura">
+        <h2>Ecossistema e arquitetura</h2>
+        <div class="grid c3">
+          <div class="card">
+            <h3>Minimalista e flexível</h3>
+            <p>
+              Não impõe estrutura de pastas, ORMs ou bancos de dados
+              específicos.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Baseado no Node.js</h3>
+            <p>
+              Herda a arquitetura do Node.js, garantindo alta performance com
+              pouco uso de memória.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Integração com npm</h3>
+            <p>
+              Possui integração com milhares de pacotes criados pela comunidade.
+            </p>
+          </div>
+        </div>
+        <div class="grid c2" style="margin-top: 16px">
+          <div class="card dark">
+            <h3>Modelo de funcionamento</h3>
+            <ol>
+              <li>O cliente envia uma requisição HTTP para o servidor.</li>
+              <li>
+                A requisição passa por uma "linha de montagem" de funções
+                (middlewares).
+              </li>
+              <li>
+                Cada middleware pode inspecionar, alterar ou interromper a
+                requisição.
+              </li>
+              <li>A rota final processa os dados e retorna a resposta HTTP.</li>
+            </ol>
+          </div>
+          <div class="card dark">
+            <h3>Principais conceitos</h3>
+            <ul>
+              <li>
+                <strong>Middlewares:</strong> funções que interceptam e
+                processam requisições antes do resultado final.
+              </li>
+              <li>
+                <strong>Roteamento (Routing):</strong> mapeamento de URIs e
+                métodos HTTP para funções que tratam a solicitação.
+              </li>
+              <li>
+                <strong>Tratamento de erros:</strong> middlewares específicos
+                para capturar e responder exceções de forma centralizada.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="previos">
+        <h2>Conhecimentos prévios</h2>
+        <div class="grid c3">
+          <div class="card">
+            <h3>JavaScript / TypeScript</h3>
+            <p>
+              Base para a lógica: arrow functions, desestruturação, arrays (map,
+              filter) e módulos.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Node.js</h3>
+            <p>
+              Runtime que executa o Express. Importante conhecer o npm, o
+              package.json e os módulos (require/import).
+            </p>
+          </div>
+          <div class="card">
+            <h3>HTTP</h3>
+            <p>
+              Requisições e respostas, métodos (GET, POST, PUT, DELETE), status
+              codes, headers e ciclo cliente-servidor.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Rotas e APIs REST (JSON)</h3>
+            <p>
+              Definem como o app responde a cada endpoint, lendo dados com
+              <code>req.body</code>, <code>req.query</code> e
+              <code>req.params</code>.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Middleware</h3>
+            <p>
+              Funções que interceptam a requisição antes da rota final:
+              autenticação, logs e tratamento de erros.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Programação assíncrona</h3>
+            <p>
+              async/await e Promises são essenciais para banco de dados, APIs e
+              arquivos.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="instalacao">
+        <h2>Instalação e configuração</h2>
+        <div class="grid c2">
+          <div class="card">
+            <h3>1. Pré-requisitos</h3>
+            <p>
+              Node.js 18+ e npm instalados. Confira com <code>node -v</code>.
+            </p>
+          </div>
+          <div class="card">
+            <h3>2. Criar o projeto</h3>
+            <pre>
+mkdir meu-projeto
+cd meu-projeto
+npm init -y</pre
+            >
+          </div>
+          <div class="card">
+            <h3>3. Instalar o Express</h3>
+            <pre>npm install express</pre>
+          </div>
+          <div class="card">
+            <h3>4. Executar localmente</h3>
+            <pre>node --watch index.js</pre>
+            <p style="margin-top: 10px">
+              Acesse <code>http://localhost:3000</code> no navegador.
+            </p>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 16px">
+          <h3>index.js</h3>
+          <p>
+            O código importa o Express, cria o servidor e define uma rota GET
+            <code>/</code> que responde "Olá, Mundo com Express!". O
+            <code>app.listen</code> mantém o servidor ouvindo na porta 3000.
+          </p>
+          <pre><span class="k">const</span> express = <span class="f">require</span>(<span class="s">'express'</span>);
+<span class="k">const</span> app = <span class="f">express</span>();
+<span class="k">const</span> port = 3000;
+
+app.<span class="f">get</span>(<span class="s">'/'</span>, (req, res) =&gt; {
+  res.<span class="f">send</span>(<span class="s">'Olá, Mundo com Express!'</span>);
+});
+
+app.<span class="f">listen</span>(port, () =&gt; {
+  console.<span class="f">log</span>(<span class="s">`Servidor rodando na porta ${port}`</span>);
+});</pre>
+        </div>
+
+        <h3 style="text-align: center; margin: 40px 0 16px; font-size: 1.4rem">
+          Estrutura do projeto
+        </h3>
+        <div class="grid c4">
+          <div class="card">
+            <h3>node_modules/</h3>
+            <p>Dependências instaladas pelo npm (não editar).</p>
+          </div>
+          <div class="card">
+            <h3>package.json</h3>
+            <p>Configurações, dependências e scripts do projeto.</p>
+          </div>
+          <div class="card">
+            <h3>package-lock.json</h3>
+            <p>Trava as versões exatas das dependências.</p>
+          </div>
+          <div class="card">
+            <h3>index.js</h3>
+            <p>Arquivo principal. Cria o servidor e define as rotas.</p>
+          </div>
+        </div>
+        <div class="note">
+          O Express não exige estrutura fixa. Conforme o projeto cresce, é comum
+          separar rotas, controllers e arquivos estáticos em pastas próprias.
+        </div>
+      </section>
+
+      <section id="recursos">
+        <h2>Principais recursos</h2>
+        <div class="stack">
+          <div class="card wide">
+            <div>
+              <h3>1. Roteamento</h3>
+              <p>
+                Define qual função responde a cada endereço (URL) e tipo de
+                requisição, como GET ou POST. Também pode ter parâmetros
+                dinâmicos, como o <code>:id</code>.
+              </p>
+            </div>
+            <pre>
+app.get('/api/produtos', (req, res) =&gt; {
+  res.json({ mensagem: 'Lista de produtos' })
+})
+
+app.get('/api/produtos/:id', (req, res) =&gt; {
+  res.json({ id: req.params.id })
+})</pre
+            >
+          </div>
+          <div class="card wide">
+            <div>
+              <h3>2. Middleware</h3>
+              <p>
+                Funções que rodam entre a requisição e a resposta. Podem ler ou
+                alterar a requisição e, ao chamar <code>next()</code>, passam o
+                fluxo adiante.
+              </p>
+            </div>
+            <pre>
+app.use((req, res, next) =&gt; {
+  console.log(req.method, req.url)
+  next()
+})</pre
+            >
+          </div>
+          <div class="card wide">
+            <div>
+              <h3>3. Arquivos estáticos</h3>
+              <p>
+                Permitem entregar arquivos prontos, como imagens, CSS e
+                JavaScript, sem precisar criar uma rota para cada um.
+              </p>
+            </div>
+            <pre>app.use(express.static('public'));</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="pontos">
+        <h2>Pontos fortes e limitações</h2>
+        <div class="grid c2">
+          <div class="pf">
+            <h3>Pontos fortes</h3>
+            <ul>
+              <li>
+                <strong>Simplicidade:</strong> é minimalista e rápido,
+                adicionando pouca sobrecarga ao Node.js.
+              </li>
+              <li>
+                <strong>Material disponível:</strong> possui muitos tutoriais,
+                pacotes e soluções na internet.
+              </li>
+              <li>
+                <strong>Sistema de middlewares:</strong> facilita a
+                interceptação e o tratamento de requisições com funções
+                intermediárias.
+              </li>
+            </ul>
+          </div>
+          <div class="pf lim">
+            <h3>Limitações</h3>
+            <ul>
+              <li>
+                <strong>Estrutura:</strong> por ser muito livre, não mantém uma
+                estrutura definida, e projetos grandes podem se tornar
+                bagunçados.
+              </li>
+              <li>
+                <strong>Código:</strong> é preciso configurar manualmente
+                autenticação, validação, tratamento de erros e conexão com banco
+                de dados.
+              </li>
+              <li>
+                <strong>Tratamento de erros:</strong> exige bibliotecas externas
+                para capturar erros async/await.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="mercado">
+        <h2>Adoção no mercado</h2>
+        <div class="grid c2">
+          <div class="card">
+            <h3>Uber, X (Twitter)</h3>
+            <p>
+              Facilita o gerenciamento de intensas demandas de tráfego, como
+              solicitações de corridas e atualizações de feed, suportando o alto
+              volume de requisições simultâneas.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Netflix, Airbnb</h3>
+            <p>
+              Resolve a demanda de consumo em diferentes dispositivos, buscando
+              informações e agrupando dados para entregar o conteúdo mais leve,
+              ideal para a tela do dispositivo do usuário.
+            </p>
+          </div>
+          <div class="card">
+            <h3>PayPal, Mercado Livre</h3>
+            <p>
+              Os middlewares suportam a demanda de integrações com as lojas
+              virtuais e notificações de terceiros, autenticando e formatando
+              lotes de dados e atualizações externas antes de liberar as
+              informações para o sistema central.
+            </p>
+          </div>
+          <div class="card">
+            <h3>NestJS, Sails.js, Feathers.js</h3>
+            <p>
+              Atendem à demanda de padronização no desenvolvimento de software
+              de grande escala, oferecendo padrões mais rigorosos para
+              aplicações complexas e transferindo ao Express o gerenciamento do
+              ciclo de vida das requisições e das rotas de rede.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="seguranca">
+        <h2>Segurança</h2>
+
+        <div class="cve">
+          <div class="cve-head">
+            <h3>Open Redirect em res.redirect()</h3>
+            <span class="badge">CVE-2024-29041</span>
+            <span class="badge med">CVSS 6.1 - Médio</span>
+          </div>
+          <div class="grid c3">
+            <div class="card">
+              <h3>Descrição</h3>
+              <p>
+                O Express codifica a URL com <code>encodeurl</code> antes de
+                enviá-la ao cabeçalho Location. Essa codificação pode
+                interpretar URLs malformadas de forma inesperada, fazendo com
+                que a validação da lista de permissão avalie um destino
+                diferente do real.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Impacto</h3>
+              <p>
+                URLs malformadas passam despercebidas por allowlists de
+                redirecionamento. O atacante redireciona a vítima para um site
+                falso a partir do seu domínio: phishing e roubo de credenciais.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Versões e mitigação</h3>
+              <p>
+                Afeta o Express anterior à 4.19.2, e o 5.0.0-alpha e beta
+                anteriores à 5.0.0-beta.3. Para mitigar:
+              </p>
+              <ul>
+                <li>Atualizar para 4.19.2 ou superior;</li>
+                <li>
+                  Validar a URL com <code>new URL()</code> antes de chamar
+                  <code>res.location</code> / <code>res.redirect</code>.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="cve">
+          <div class="cve-head">
+            <h3>Prototype Pollution no qs (DoS)</h3>
+            <span class="badge">CVE-2022-24999</span>
+            <span class="badge high">CVSS 7.5 - Alto</span>
+          </div>
+          <div class="grid c3">
+            <div class="card">
+              <h3>Descrição</h3>
+              <p>
+                A biblioteca qs, usada pelo Express para interpretar query
+                strings, não bloqueava chaves como <code>__proto__</code>. Isso
+                permitia modificar o protótipo global de objetos JavaScript,
+                alterando propriedades herdadas por todos os objetos da
+                aplicação.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Impacto</h3>
+              <p>
+                Um atacante pode injetar payloads maliciosos via query string
+                (<code>?__proto__[x]=y</code>), corrompendo globalmente o
+                <code>Object.prototype</code>. Isso trava o processo Node.js,
+                gerando negação de serviço sem exigir autenticação.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Versões e mitigação</h3>
+              <p>Afeta o Express anterior à 4.17.3. Para mitigar:</p>
+              <ul>
+                <li>
+                  Atualizar para 4.17.3 ou superior e rodar
+                  <code>npm audit</code>;
+                </li>
+                <li>
+                  Usar <code>app.set("query parser", "simple")</code> se não
+                  precisar de objetos aninhados.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" class="demo">
+        <h2>Projeto e demonstração</h2>
+        <p class="lead">
+          Aplicação web simples que anota e exclui pedidos. Utiliza Express.js
+          para a API e Vue.js para o visual.
+        </p>
+        <div class="grid c2">
+          <div class="card">
+            <h3>Interface (Vue.js)</h3>
+            <pre>
+&lt;div class="pedido"&gt;
+  &lt;input v-model="novoPedido" @keyup.enter="fazerPedido"&gt;
+  &lt;button @click="fazerPedido"&gt;Pedir&lt;/button&gt;
+&lt;/div&gt;</pre
+            >
+          </div>
+          <div class="card">
+            <h3>Chamada à API (Express)</h3>
+            <pre>
+const fazerPedido = async () =&gt; {
+  if (novoPedido.value.trim() === '') return;
+
+  await fetch('/api/pedidos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nome: novoPedido.value })
+  });
+</pre
+            >
+          </div>
+        </div>
+      </section>
+
+      <section id="conclusao">
+        <h2>Conclusão</h2>
+        <div class="note" style="font-size: 1.05rem">
+          Express é uma solução
+          <strong
+            >leve e eficiente para desenvolver APIs e integração com interfaces
+            reativas</strong
+          >. Recomenda-se o uso para
+          <strong>MVPs e projetos de pequeno a médio porte</strong> que buscam
+          flexibilidade e entregas ágeis. Mas
+          <strong
+            >não é indicado para grandes sistemas corporativos e
+            complexos</strong
+          >.
+        </div>
+
+        <h3 style="text-align: center; margin: 40px 0 16px; font-size: 1.4rem">
+          REFERÊNCIAS
+        </h3>
+        <div class="card">
+          <ul class="ref">
+            <li>
+              <a href="https://stackshare.io/expressjs"
+                >https://stackshare.io/expressjs</a
+              >
+            </li>
+            <li>
+              <a href="https://www.treinaweb.com.br/blog/o-que-e-o-express-js"
+                >https://www.treinaweb.com.br/blog/o-que-e-o-express-js</a
+              >
+            </li>
+            <li>
+              <a href="https://pt.wikipedia.org/wiki/Express.js"
+                >https://pt.wikipedia.org/wiki/Express.js</a
+              >
+            </li>
+            <li><a href="https://expressjs.com/">https://expressjs.com/</a></li>
+            <li>
+              <a href="https://expressjs.com/en/guide/using-middleware/"
+                >https://expressjs.com/en/guide/using-middleware/</a
+              >
+            </li>
+            <li>
+              <a href="https://expressjs.com/en/guide/routing/"
+                >https://expressjs.com/en/guide/routing/</a
+              >
+            </li>
+            <li>
+              <a href="https://www.npmjs.com/package/express"
+                >https://www.npmjs.com/package/express</a
+              >
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="foot">
+        <div>
+          <h2>Integrantes</h2>
+          <ul>
+            <li>Ana Lívia dos Santos Lopes</li>
+            <li>Jacquys Barbosa da Silva</li>
+            <li>João Gustavo Mota Ramos</li>
+            <li>João Pedro da Cunha Machado</li>
+            <li>Jhônatas Lopes da Silva</li>
+            <li>Lucas Machado Crispim</li>
+            <li>Luis Gustavo Cesar Consoli de Almeida</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Curso</h2>
+          <p><strong>Professor:</strong> Wesley Novaes Fioreze Costa</p>
+          <p><strong>Turma:</strong> ADS 2º Semestre</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
